@@ -218,6 +218,7 @@ export interface AttachmentMeta {
   linkedEntityType: string;
   linkedEntityId?: string | null;
   occurredAt: string;
+  dataBase64?: string;
   notes?: string;
   createdAt: string;
 }

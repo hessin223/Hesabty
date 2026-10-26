@@ -22,6 +22,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: 00/package-lock.json
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -30,18 +31,27 @@ jobs:
           java-version: 21
 
       - name: Install dependencies
+        working-directory: 00
         run: npm ci
 
       - name: Run tests
+        working-directory: 00
         run: npm test
 
       - name: Build web app
+        working-directory: 00
         run: npm run build
 
       - name: Setup Android project
-        run: npx cap sync android
+        working-directory: 00
+        run: |
+          if [ ! -d android ]; then
+            npx cap add android
+          fi
+          npx cap sync android
 
       - name: Build APK
+        working-directory: 00
         run: |
           cd android
           chmod +x gradlew
@@ -51,5 +61,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: hesabty-android-debug-apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: 00/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
